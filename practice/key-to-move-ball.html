@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        #circle-object {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background: red;
+            position: relative;
+        }
+
+        #key-frame {
+            float: right;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+
+        <input type="text"  v-on:keydown="arrowPress" v-on:keyup="arrowUnPressed">
+        <!-- <button v-on:click="upkey"></button> -->
+        <!-- <circle-object id="circle-object" v-bind:style="styleObject"></circle-object> -->
+        <circle-object id="circle-object" v-bind:styleobject="styleObject" ></circle-object>
+        <key-arrow id="key-frame" 
+            v-bind:uppressed="uppressed" 
+            v-bind:rightpressed="rightpressed" 
+            v-bind:downpressed="downpressed" 
+            v-bind:leftpressed="leftpressed">
+        </key-arrow>
+
+
+    </div>
+
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- <script src="https://unpkg.com/vue-router@3"></script> -->
+    <script>
+        var width = 500;
+        var height = 500;
+        var Circle = {
+            template: '<div v-bind:style="styleobject"></div>',
+            props: ['styleobject']
+        }
+
+        var upArrow = {
+            template: '<div class="key-frame" v-bind:style="color">&#8593;</div>',
+            props: ['color']
+        }
+        var rightArrow = {
+            template: '<div class="key-frame">&#8594;</div>'
+        }
+        var downArrow = {
+            template: '<div class="key-frame">&#8594;</div>'
+        }
+        var leftArrow = {
+            template: '<div class="key-frame">&#8595;</div>'
+        }
+        var KeyArrow = {
+            template: '<ul id="key-list">'+
+                '<li><up-arrow v-bind:color="upColor"></up-arrow></li>'+
+                '<li><right-arrow v-bind:color="rightColor"></right-arrow></li>'+
+                '<li><down-arrow v-bind:color="downColor"></down-arrow></li>'+
+                '<li><left-arrow v-bind:color="leftColor"></left-arrow></li>'+
+                '</ul>',
+            props: ['uppressed','rightpressed','downpressed','leftpressed'],
+            computed: {
+                upColor: function() {
+                    return this.uppressed ? {color: 'green'} : undefined;
+                },
+                rightColor: function() {
+                    return this.rightpressed ? {color: 'green'}  : undefined;
+                },
+                downColor: function() {
+                    return this.downpressed ? {color: 'green'}  : undefined;
+                },
+                leftColor: function() {
+                    return this.leftpressed ? {color: 'green'}  : undefined;
+                }
+            },
+            components: {
+                'up-arrow': upArrow,
+                'right-arrow': rightArrow,
+                'down-arrow': downArrow,
+                'left-arrow': leftArrow
+            }
+        }
+
+        new Vue({
+            el: '#app',
+            data: {
+                uppressed: false,
+                rightpressed: false,
+                downpressed: false,
+                leftpressed: false,
+                top: 10,
+                left: 10,
+                speed: 10
+            },
+            computed: {
+                styleObject: function() {
+                    return {
+                        top: this.top + 'px',
+                        left: this.left + 'px'
+                    }
+                }
+            },
+            components: {
+                'circle-object': Circle,
+                'key-arrow': KeyArrow
+            },
+            methods:{
+                arrowPress(evt) {
+                    var pressed = evt.code;
+                    if (pressed === 'ArrowUp'){
+                        this.upkey();
+                    } else if (pressed === 'ArrowRight'){
+                        this.rightkey();
+                    } else if (pressed === 'ArrowDown'){
+                        this.downkey();
+                    } else if(pressed === 'ArrowLeft'){
+                        this.leftkey();
+                    } 
+                },
+                upkey: function() {
+                    this.uppressed = true;
+                    this.top -= this.speed;
+                },
+                rightkey() {
+                    this.rightpressed = true;
+                    this.left += this.speed;
+                },
+                downkey() {
+                    this.downpressed = true;
+                    this.top += this.speed;
+                },
+                leftkey() {
+                    this.leftpressed = true;
+                    this.left -= this.speed;
+                },
+                arrowUnPressed(evt) {
+                    var pressed = evt.code;
+                    if (pressed === 'ArrowUp'){
+                        this.uppressed = false;
+                    } else if (pressed === 'ArrowRight'){
+                        this.rightpressed = false;
+                    } else if (pressed === 'ArrowDown'){
+                        this.downpressed = false;
+                    } else if(pressed === 'ArrowLeft'){
+                        this.leftpressed = false;
+                    } 
+                }
+                
+            }
+        })
+    </script>
+</body>
+</html>
