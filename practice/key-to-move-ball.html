@@ -20,9 +20,9 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="app">
+    <div id="app" >
 
-        <input type="text"  v-on:keydown="arrowPress" v-on:keyup="arrowUnPressed">
+        <!-- <input type="text"  v-on:keydown="arrowPress" v-on:keyup="arrowUnPressed"> -->
         <!-- <button v-on:click="upkey"></button> -->
         <!-- <circle-object id="circle-object" v-bind:style="styleObject"></circle-object> -->
         <circle-object id="circle-object" v-bind:styleobject="styleObject" ></circle-object>
@@ -53,13 +53,16 @@
             props: ['color']
         }
         var rightArrow = {
-            template: '<div class="key-frame">&#8594;</div>'
+            template: '<div class="key-frame" v-bind:style="color">&#8594;</div>',
+            props: ['color']
         }
         var downArrow = {
-            template: '<div class="key-frame">&#8594;</div>'
+            template: '<div class="key-frame" v-bind:style="color">&#8595;</div>',
+            props: ['color']
         }
         var leftArrow = {
-            template: '<div class="key-frame">&#8595;</div>'
+            template: '<div class="key-frame" v-bind:style="color">&#8592;</div>',
+            props: ['color']
         }
         var KeyArrow = {
             template: '<ul id="key-list">'+
@@ -71,10 +74,14 @@
             props: ['uppressed','rightpressed','downpressed','leftpressed'],
             computed: {
                 upColor: function() {
-                    return this.uppressed ? {color: 'green'} : undefined;
+                    let tmp =  this.uppressed ? {color: 'green'} : undefined;
+                    console.log(tmp);
+                    return tmp;
                 },
                 rightColor: function() {
-                    return this.rightpressed ? {color: 'green'}  : undefined;
+                    let tmp =  this.rightpressed ? {color: 'green'} : undefined;
+                    console.log(tmp);
+                    return tmp;
                 },
                 downColor: function() {
                     return this.downpressed ? {color: 'green'}  : undefined;
@@ -91,7 +98,7 @@
             }
         }
 
-        new Vue({
+        var app = new Vue({
             el: '#app',
             data: {
                 uppressed: false,
@@ -117,6 +124,7 @@
             methods:{
                 arrowPress(evt) {
                     var pressed = evt.code;
+                    console.log(pressed);
                     if (pressed === 'ArrowUp'){
                         this.upkey();
                     } else if (pressed === 'ArrowRight'){
@@ -157,6 +165,13 @@
                 }
                 
             }
+        })
+
+        window.addEventListener('keydown', function(e){
+            app.arrowPress(e);
+        })
+        window.addEventListener('keyup', function(e){
+            app.arrowUnPressed(e);
         })
     </script>
 </body>
